@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:async/async.dart';
+import 'package:tuple/tuple.dart';
 
 void main(List<String> arguments) async {
   final dry = arguments.isNotEmpty;
+
+  final path = 'files/level2/level2_';
   
-  final path = 'files/level1/level1_';
+  await runFile('${path}example', dry);
   
   for(var i = 1; i <= 5; i++) {
-    await runFile('$path$i', dry);
+    //await runFile('$path$i', dry);
   }
   
 }
@@ -36,18 +39,19 @@ Future<String> runSolution(String path) async {
 
   final input = StreamQueue<String>(file.openRead().transform(utf8.decoder).transform(LineSplitter()));
   
-  final num = int.parse(await input.next);
-
-  var min = int.parse(await input.next);
-  var minId = 0;
+  final costNum = int.parse(await input.next);
+  var costs = await input.take(costNum);
+  final taskNum = int.parse(await input.next);
+  var tasks = (await input.take(taskNum)).map((e) {
+    final split = e.split(' ').map(int.parse).toList();
+    return Tuple2(split[0], split[1]);
+  });
   
-  for(var i = 1; i < num; i++) {
-    var cost = int.parse(await input.next);
-    if(cost < min) {
-      min = cost;
-      minId = i;
-    }
+  final taskMin = <int, int>{};
+  
+  for(var i = 0; i < costNum; i++) {
+    
   }
   
-  return '$minId';
+  return '0';
 }
